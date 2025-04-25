@@ -1,10 +1,10 @@
-package com.neighbor.eventmosaic.adapter.model;
+package com.neighbor.eventmosaic.adapter.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Модель упоминания из GDELT CSV файла (15 полей)
+ * DTO упоминания из GDELT CSV файла (15 полей)
  */
 @Data
 @NoArgsConstructor

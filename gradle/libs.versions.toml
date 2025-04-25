@@ -4,11 +4,17 @@ springBoot = "3.4.4"
 springCloud = "2024.0.0"
 springDependencyManagement = "1.1.7"
 
+# Парсинг
+apacheCommonsCsv = "1.14.0"
+
 # Логирование
 logstashLogback = "8.0"
 
 # Lombok
 lombok = "1.18.38"
+
+# Storage
+minio = "8.5.17"
 
 # Тестирование
 testcontainers = "1.20.6"
@@ -23,6 +29,9 @@ spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-star
 # Spring Cloud
 spring-cloud-starter-netflix-eureka = { module = "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client" }
 
+# Parsing
+apache-commons-csv = { module = "org.apache.commons:commons-csv", version.ref = "apacheCommonsCsv" }
+
 # Kafka
 spring-kafka = { module = "org.springframework.kafka:spring-kafka" }
 spring-kafka-test = { module = "org.springframework.kafka:spring-kafka-test" }
@@ -33,6 +42,9 @@ logstash-logback-encoder = { module = "net.logstash.logback:logstash-logback-enc
 
 # Lombok
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+
+# Storage
+minio = { module = "io.minio:minio", version.ref  = "minio" }
 
 # Testcontainers
 testcontainers-core = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
