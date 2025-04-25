@@ -10,7 +10,8 @@ spring:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      batch-size: 16384                                                                       # Размер пакета сообщений в байтах
       acks: all                                                                               # Подтверждение всех реплик (все брокеры должны подтвердить запись сообщения)
       properties:
         enable.idempotence: true                                                              # Включаем идемпотентность (для предотвращения дублирования сообщений)
@@ -73,5 +74,15 @@ retry:
 # Топики Kafka
 kafka:
   topic:
-    raw-data: ${KAFKA_TOPIC_RAW_DATA:gdelt-raw-data-topic}
-    parsed-data: ${KAFKA_TOPIC_PARSED_DATA:gdelt-parsed-data-topic}
+    consumer:
+      collector-event: ${KAFKA_TOPIC_CONSUMER_COLLECTOR_EVENT:gdelt-translation-export-topic}
+      collector-mention: ${KAFKA_TOPIC_COLLECTOR_MENTION:gdelt-translation-mentions-topic}
+    producer:
+        adapter-event: ${KAFKA_TOPIC_PRODUCER_ADAPTER_EVENT:gdelt-adapter-event-topic}
+        adapter-mention: ${KAFKA_TOPIC_PRODUCER_ADAPTER_MENTION:gdelt-adapter-mention-topic}
+
+storage:
+  minio:
+    url: ${STORAGE_MINIO_URL:localhost:9000}                                                    # URL-адрес MinIO
+    access-key: ${STORAGE_MINIO_ACCESS_KEY:em}                                                  # Доступ к MinIO
+    secret-key: ${STORAGE_MINIO_SECRET_KEY:em}                                                  # Секретный ключ доступа к MinIO

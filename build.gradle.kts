@@ -27,11 +27,13 @@ dependencies {
 	// Spring Boot
 	implementation(libs.spring.boot.starter.web)
 	implementation(libs.spring.boot.starter.actuator)
-
 	developmentOnly(libs.spring.boot.docker.compose)
 
 	// Spring Cloud
 	implementation(libs.spring.cloud.starter.netflix.eureka)
+
+	// Parsing
+	implementation(libs.apache.commons.csv)
 
 	// Kafka
 	implementation(libs.spring.kafka)
@@ -43,6 +45,9 @@ dependencies {
 	// Lombok
 	compileOnly(libs.lombok)
 	annotationProcessor(libs.lombok)
+
+	// Storage
+	implementation(libs.minio)
 
 	// Test
 	testImplementation(libs.spring.boot.starter.test)
