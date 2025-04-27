@@ -1,6 +1,7 @@
 package com.neighbor.eventmosaic.adapter.util;
 
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 
@@ -9,6 +10,7 @@ import java.util.function.Function;
 /**
  * Утилитный класс для парсинга CSV-файлов
  */
+@Slf4j
 @UtilityClass
 public class CsvParserUtil {
 
@@ -16,9 +18,14 @@ public class CsvParserUtil {
      * Безопасно получает строковое значение из записи
      */
     public static String getString(CSVRecord csvRecord, int index) {
-        return index < csvRecord.size()
-                ? csvRecord.get(index)
-                : null;
+        if (index >= csvRecord.size()) {
+            return null;
+        }
+
+        String value = csvRecord.get(index);
+        return StringUtils.isEmpty(value)
+                ? null
+                : value;
     }
 
     /**
@@ -65,6 +72,7 @@ public class CsvParserUtil {
         try {
             return converter.apply(value);
         } catch (Exception e) {
+            log.error("Ошибка при преобразовании значения: {}", e.getMessage());
             return null;
         }
     }
