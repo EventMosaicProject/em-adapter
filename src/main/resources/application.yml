@@ -75,11 +75,11 @@ retry:
 kafka:
   topic:
     consumer:
-      collector-event: ${KAFKA_TOPIC_CONSUMER_COLLECTOR_EVENT:gdelt-translation-export-topic}
-      collector-mention: ${KAFKA_TOPIC_COLLECTOR_MENTION:gdelt-translation-mentions-topic}
+      collector-event: ${KAFKA_TOPIC_COLLECTOR_EVENT:gdelt-collector-event-topic}
+      collector-mention: ${KAFKA_TOPIC_MENTION:gdelt-collector-mention-topic}
     producer:
-        adapter-event: ${KAFKA_TOPIC_PRODUCER_ADAPTER_EVENT:gdelt-adapter-event-topic}
-        adapter-mention: ${KAFKA_TOPIC_PRODUCER_ADAPTER_MENTION:gdelt-adapter-mention-topic}
+      adapter-event: ${KAFKA_TOPIC_ADAPTER_EVENT:gdelt-adapter-event-topic}
+      adapter-mention: ${KAFKA_TOPIC_ADAPTER_MENTION:gdelt-adapter-mention-topic}
 
 storage:
   minio:
