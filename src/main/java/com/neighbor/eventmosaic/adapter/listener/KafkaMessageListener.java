@@ -4,6 +4,7 @@ import com.neighbor.eventmosaic.adapter.dto.Event;
 import com.neighbor.eventmosaic.adapter.dto.Mention;
 import com.neighbor.eventmosaic.adapter.publisher.KafkaMessagePublisher;
 import com.neighbor.eventmosaic.adapter.service.CsvProcessingService;
+import com.neighbor.eventmosaic.adapter.util.FileNameUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -30,8 +31,10 @@ public class KafkaMessageListener {
     @KafkaListener(topics = "${kafka.topic.consumer.collector-event}")
     public void processEventsPath(String path) {
         log.info("Получен путь к файлу событий: {}", path);
+        String batchId = FileNameUtil.extractBatchId(path);
+
         List<Event> events = csvProcessingService.processCsvFile(path, Event.class);
-        kafkaMessagePublisher.publishEventMessages(events);
+        kafkaMessagePublisher.publishEventMessages(events, batchId);
     }
 
     /**
@@ -42,7 +45,9 @@ public class KafkaMessageListener {
     @KafkaListener(topics = "${kafka.topic.consumer.collector-mention}")
     public void processMentionsPath(String path) {
         log.info("Получен путь к файлу упоминаний: {}", path);
+        String batchId = FileNameUtil.extractBatchId(path);
+
         List<Mention> mentions = csvProcessingService.processCsvFile(path, Mention.class);
-        kafkaMessagePublisher.publishMentionMessages(mentions);
+        kafkaMessagePublisher.publishMentionMessages(mentions, batchId);
     }
 }
