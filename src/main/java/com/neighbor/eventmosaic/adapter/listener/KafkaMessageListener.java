@@ -1,10 +1,10 @@
 package com.neighbor.eventmosaic.adapter.listener;
 
-import com.neighbor.eventmosaic.adapter.dto.Event;
-import com.neighbor.eventmosaic.adapter.dto.Mention;
 import com.neighbor.eventmosaic.adapter.publisher.KafkaMessagePublisher;
 import com.neighbor.eventmosaic.adapter.service.CsvProcessingService;
 import com.neighbor.eventmosaic.adapter.util.FileNameUtil;
+import com.neighbor.eventmosaic.library.common.dto.Event;
+import com.neighbor.eventmosaic.library.common.dto.Mention;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
