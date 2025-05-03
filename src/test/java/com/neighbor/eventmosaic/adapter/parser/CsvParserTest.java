@@ -1,7 +1,7 @@
 package com.neighbor.eventmosaic.adapter.parser;
 
-import com.neighbor.eventmosaic.adapter.dto.Event;
-import com.neighbor.eventmosaic.adapter.dto.Mention;
+import com.neighbor.eventmosaic.library.common.dto.Event;
+import com.neighbor.eventmosaic.library.common.dto.Mention;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

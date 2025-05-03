@@ -1,7 +1,5 @@
 package com.neighbor.eventmosaic.adapter.service;
 
-import com.neighbor.eventmosaic.adapter.dto.Event;
-import com.neighbor.eventmosaic.adapter.dto.Mention;
 import com.neighbor.eventmosaic.adapter.exception.CsvParsingException;
 import com.neighbor.eventmosaic.adapter.exception.FileAccessException;
 import com.neighbor.eventmosaic.adapter.exception.ParserNotFoundException;
@@ -9,6 +7,8 @@ import com.neighbor.eventmosaic.adapter.parser.CsvParser;
 import com.neighbor.eventmosaic.adapter.parser.EventCsvParser;
 import com.neighbor.eventmosaic.adapter.parser.MentionCsvParser;
 import com.neighbor.eventmosaic.adapter.source.FileSourceProvider;
+import com.neighbor.eventmosaic.library.common.dto.Event;
+import com.neighbor.eventmosaic.library.common.dto.Mention;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

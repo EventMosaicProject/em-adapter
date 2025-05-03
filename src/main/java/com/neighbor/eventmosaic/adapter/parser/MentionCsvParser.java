@@ -1,6 +1,6 @@
 package com.neighbor.eventmosaic.adapter.parser;
 
-import com.neighbor.eventmosaic.adapter.dto.Mention;
+import com.neighbor.eventmosaic.library.common.dto.Mention;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
