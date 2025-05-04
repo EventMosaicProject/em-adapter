@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class KafkaMessagePublisher {
 
-    private static final String BATCH_ID_HEADER = "ID-Batch";
+    private static final String BATCH_ID_HEADER = "X-Batch-ID";
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
