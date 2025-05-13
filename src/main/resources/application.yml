@@ -59,11 +59,11 @@ eureka:
       defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE:http://em-discovery:8761/eureka/}   # URL-адрес реестра Eureka
   instance:
     prefer-ip-address: ${EUREKA_PREFER_IP:false}                                                # Используем хостнейм вместо IP
-    instance-id: ${EUREKA_INSTANCE_HOSTNAME:localhost}:${server.port}:${random.uuid}            # Уникальный идентификатор инстанса
+    instance-id: ${EUREKA_INSTANCE_HOSTNAME:em-adapter}:${server.port}:${random.uuid}           # Уникальный идентификатор инстанса
     lease-renewal-interval-in-seconds: ${EUREKA_HEARTBEAT_INTERVAL:30}                          # Частота отправки heartbeat
     lease-expiration-duration-in-seconds: ${EUREKA_LEASE_EXPIRATION:90}                         # Время, через которое инстанс будет считаться недоступным
-    health-check-url-path: ${EUREKA_HEALTH_CHECK_PATH:/actuator/health}                         # URL для проверки состояния
-    status-page-url-path: ${EUREKA_STATUS_PAGE_PATH:/actuator/info}                             # URL страницы статуса
+    status-page-url: http://${GATEWAY_PUBLIC_HOSTNAME:localhost}:${GATEWAY_PUBLIC_PORT:8080}/adapter/actuator
+    health-check-url: http://${GATEWAY_PUBLIC_HOSTNAME:localhost}:${GATEWAY_PUBLIC_PORT:8080}/adapter/actuator/health
 
 
 # Настройки повторных попыток
@@ -81,8 +81,9 @@ kafka:
       adapter-event: ${KAFKA_TOPIC_ADAPTER_EVENT:gdelt-adapter-event-topic}
       adapter-mention: ${KAFKA_TOPIC_ADAPTER_MENTION:gdelt-adapter-mention-topic}
 
+# Конфигурация MinIO клиента
 storage:
   minio:
-    url: ${STORAGE_MINIO_URL:localhost:9000}                                                    # URL-адрес MinIO
-    access-key: ${STORAGE_MINIO_ACCESS_KEY:em}                                                  # Доступ к MinIO
-    secret-key: ${STORAGE_MINIO_SECRET_KEY:em}                                                  # Секретный ключ доступа к MinIO
+    endpoint: ${MINIO_ENDPOINT:http://minio:9000}                                                 # URL MinIO сервера (localhost для локального запуска)
+    access-key: ${MINIO_ACCESS_KEY:eventmosaic}                                                   # Имя пользователя (из docker-compose)
+    secret-key: ${MINIO_SECRET_KEY:eventmosaic}                                                   # Пароль (из docker-compose)
