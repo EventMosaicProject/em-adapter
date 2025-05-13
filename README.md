@@ -5,13 +5,11 @@
 ## Основной рабочий процесс
 
 1. **Получение пути к файлу из Kafka:**
-    * Сервис слушает топики Kafka (`gdelt-collector-event-topic` и `gdelt-collector-mention-topic`), которые содержат пути к CSV-файлам в формате строки.
-    * На данный момент используются абсолютные пути к файлам на локальной файловой системе, но архитектура подготовлена для работы с другими источниками файлов (например, MinIO).
+   * Сервис слушает топики Kafka (`gdelt-collector-event-topic` и `gdelt-collector-mention-topic`), которые содержат URL к CSV-файлам в MinIO хранилище в формате строки.
+   * Архитектура сервиса использует `MinioFileSourceProvider` для получения файлов из MinIO по предоставленному URL.
 
 2. **Доступ к файлу:**
-    * В зависимости от конфигурации, сервис использует соответствующую реализацию `FileSourceProvider`:
-        * `LocalFileSourceProvider` - для доступа к файлам по абсолютному пути на локальной файловой системе
-        * `MinioFileSourceProvider` - для доступа к файлам в MinIO хранилище
+   * Сервис использует реализацию `MinioFileSourceProvider` для доступа к файлам в MinIO хранилище по URL, полученному из Kafka.
 
 3. **Парсинг CSV-файла:**
     * `CsvProcessingService` получает содержимое файла через `FileSourceProvider` и передает поток данных соответствующему парсеру.
@@ -31,16 +29,9 @@
         * Упоминания (`Mention`) => `gdelt-adapter-mention-topic`
     * Для надежной доставки используется настройка `acks=all` и механизм идемпотентности.
 
-## Обработка ошибок
-
-* **Ошибки доступа к файлам:** Обрабатываются через специализированные исключения `FileAccessException` и `MinioAccessException`.
-* **Ошибки парсинга:** При проблемах с форматом данных выбрасывается `CsvParsingException`.
-* **Ошибки Kafka:** Настроен `DefaultErrorHandler` с политикой повторных попыток (`FixedBackOff`) для обработки временных сбоев.
-* **Валидация данных:** Невалидные записи с отсутствующими ключевыми полями логируются и пропускаются.
-
 ## Расширяемость
 
-* **Абстракция источника файлов:** Интерфейс `FileSourceProvider` позволяет легко добавить новые источники данных помимо локальной файловой системы и MinIO.
+* **Абстракция источника файлов:** Интерфейс `FileSourceProvider` позволяет легко добавить новые источники данных помимо MinIO.
 * **Абстракция парсеров:** Интерфейс `CsvParser<T>` обеспечивает единообразную обработку различных типов CSV-файлов.
 * **Масштабируемость:** Потоковая обработка CSV и пакетная отправка в Kafka позволяют эффективно обрабатывать большие объемы данных.
 
@@ -56,17 +47,13 @@ sequenceDiagram
     participant Producer as KafkaProducer
     participant OutKafka as Kafka Topics
 
-    Kafka->>Listener: Сообщение с путем к файлу
-    Note over Listener: Определение типа файла<br>по имени
+    Kafka->>Listener: Сообщение с URL к файлу в MinIO
+    Note over Listener: Определение типа файла<br>по имени (если применимо) или типу события Kafka
 
     alt Файл с событиями (*.export.CSV)
-        Listener->>CsvService: processCsvFile(path, Event.class)
-        CsvService->>FileProvider: getFileContent(path)
-        alt Локальный файл
-            FileProvider->>FileProvider: Открыть локальный файл
-        else MinIO
-            FileProvider->>FileProvider: Получить объект из MinIO
-        end
+        Listener->>CsvService: processCsvFile(fileUrl, Event.class)
+        CsvService->>FileProvider: getFileContent(fileUrl)
+        FileProvider->>FileProvider: Получить объект из MinIO по URL
         FileProvider-->>CsvService: InputStream
         CsvService->>Parser: EventCsvParser.parseStream()
         Parser->>Parser: Чтение и парсинг CSV
@@ -90,8 +77,9 @@ sequenceDiagram
         OutKafka-->>Producer: ACK
         
     else Файл с упоминаниями (*.mentions.CSV)
-        Listener->>CsvService: processCsvFile(path, Mention.class)
-        CsvService->>FileProvider: getFileContent(path)
+        Listener->>CsvService: processCsvFile(fileUrl, Mention.class)
+        CsvService->>FileProvider: getFileContent(fileUrl)
+        FileProvider->>FileProvider: Получить объект из MinIO по URL
         FileProvider-->>CsvService: InputStream
         CsvService->>Parser: MentionCsvParser.parseStream()
         Parser->>Parser: Чтение и парсинг CSV
